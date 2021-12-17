@@ -7,7 +7,7 @@
   
 ## Intro
 This is a C++ remake version of the original [Stair Speedtest](https://github.com/tindy2013/stairspeedtest) script. Despite its similarity to the script verion, this remake version works much more effectively, with faster node parsing, result picture rendering and even cross-platform support.  
-
+ 
 ## Special Thanks
 * [@NyanChanMeow](https://github.com/nyanchanmeow) for the original script [SSRSpeed](https://github.com/nyanchanmeow/ssrspeed)
 * [@CareyWong](https://github.com/careywang) for Web GUI design
