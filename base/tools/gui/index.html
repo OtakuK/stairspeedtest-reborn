@@ -2,15 +2,13 @@
 <html>
 <meta charset="utf-8" />
 <!-- 引入 vue -->
-<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js" integrity="sha256-kXTEJcRFN330VirZFl6gj9+UM6gIKW195fYZeR3xDhc=" crossorigin="anonymous"></script>
 
 <!-- 引入样式 -->
-<!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
-<link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.2/theme-chalk/index.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/element-ui@2.13.2/lib/theme-chalk/index.css" rel="stylesheet">
 
 <!-- 引入组件库 -->
-<!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
-<script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.2/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-ui@2.13.2/lib/index.js"></script>
 
 <body>
 	<div id="app">
@@ -207,15 +205,11 @@
 					}
 				},
 				beforeUpload(file) {
-					const isType = file.type === 'application/json' || file.type === 'application/octet-stream'
 					const fsize = file.size / 1024 / 1024 <= 2;
-					if (!isType) {
-						this.$message.error('选择的文件格式有误!');
-					}
 					if (!fsize) {
 						this.$message.error('上传的文件不能超过2MB!');
 					}
-					return isType && fsize;
+					return fsize;
 				},
 				checkUploadStatus(type) {
 					if(!this.upload)

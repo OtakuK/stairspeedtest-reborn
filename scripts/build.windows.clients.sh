@@ -4,6 +4,13 @@ mkdir "$USERPROFILE/clients/built"
 cd "$USERPROFILE/clients"
 set -xe
 
+if [ ! -d mbedtls/ ]; then git clone https://github.com/Mbed-TLS/mbedtls --branch mbedtls-2.28 --depth=1; fi
+cd mbedtls
+git pull --ff-only
+cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_PROGRAMS=OFF -DENABLE_TESTING=OFF -DMBEDTLS_FATAL_WARNINGS=OFF -DUSE_STATIC_MBEDTLS_LIBRARY=ON -DCMAKE_INSTALL_PREFIX="$MINGW_PREFIX" -G "Unix Makefiles" .
+make install -j4
+cd ..
+
 if [ ! -d libev-mingw/ ]; then # assume libev-mingw will never update again
   curl -LO https://github.com/shadowsocks/libev/archive/mingw.tar.gz
   tar xvf mingw.tar.gz
@@ -31,8 +38,9 @@ mv simple-obfs.exe ../built/
 cd ..
 
 if [ ! -d shadowsocks-libev/ ]; then
-  git clone https://github.com/shadowsocks/shadowsocks-libev --depth=1
+  git clone https://github.com/shadowsocks/shadowsocks-libev
   cd shadowsocks-libev
+  git reset --hard c2fc967
   git submodule update --init
   ./autogen.sh
   ./configure --disable-documentation --with-ev="$LIBEV_PATH"
@@ -41,6 +49,7 @@ else
   # reset fix to avoid fast-forward conflict
   git checkout -- src/utils.h
   git pull --ff-only
+  git reset --hard c2fc967
   git submodule update
   # skip configure to save some time
 fi
@@ -91,12 +100,12 @@ cd ..
 
 if [[ "$MSYSTEM" = "MINGW64" ]];then
     curl -LO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-64.zip
-    curl -LO https://github.com/joewalnes/websocketd/releases/download/v0.3.1/websocketd-0.3.1-windows_amd64.zip
+    curl -LO https://github.com/joewalnes/websocketd/releases/download/v0.4.1/websocketd-0.4.1-windows_amd64.zip
     curl -LO https://github.com/shadowsocks/v2ray-plugin/releases/download/v1.3.1/v2ray-plugin-windows-amd64-v1.3.1.tar.gz
 fi
 if [[ "$MSYSTEM" = "MINGW32" ]];then
     curl -LO https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-windows-32.zip
-    curl -LO https://github.com/joewalnes/websocketd/releases/download/v0.3.1/websocketd-0.3.1-windows_386.zip
+    curl -LO https://github.com/joewalnes/websocketd/releases/download/v0.4.1/websocketd-0.4.1-windows_386.zip
     curl -LO https://github.com/shadowsocks/v2ray-plugin/releases/download/v1.3.1/v2ray-plugin-windows-386-v1.3.1.tar.gz
 fi
 
@@ -109,11 +118,11 @@ curl -LO https://github.com/shadowsocksrr/shadowsocksr-csharp/releases/download/
 mv ShadowsocksR-win-4.9.2/ShadowsocksR-dotnet2.0.exe built/shadowsocksr-win.exe
 
 unzip v2ray*.zip v2ray.exe v2ctl.exe
-unzip websocketd*.zip websocketd
+unzip websocketd*.zip websocketd.exe
 tar xvf v2ray-plugin*.gz
 rm v2ray-plugin*.gz
 mv v2ray-plugin* built/v2ray-plugin.exe
 mv v2ray.exe v2ctl.exe built/
-mv websocketd built/websocketd.exe
+mv websocketd.exe built/websocketd.exe
 
 set +xe
